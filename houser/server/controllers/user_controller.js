@@ -7,7 +7,7 @@ module.exports = {
             .then(response => {
                 req.session.user.id = response.id;
                 req.session.user.username = response.username;
-                return res.status(200).json();
+                return res.status(200).json(req.session.user);
             })
             .catch(console.log);
     },
@@ -19,7 +19,7 @@ module.exports = {
             .then(response => {
                 req.session.user.id = response.id;
                 req.session.user.username = response.username;
-                return res.status(200).json();
+                return res.status(200).json(req.session.user);
             })
             .catch(console.log);
     },
