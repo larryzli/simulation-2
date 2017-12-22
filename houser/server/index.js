@@ -18,26 +18,26 @@ const app = express();
 
 // CONNECT TO DATABASE
 massive(process.env.CONNECTION_STRING)
-    .then(db => {
-        app.set("db", db);
-    })
-    .catch(console.log);
+  .then(db => {
+    app.set("db", db);
+  })
+  .catch(console.log);
 
 // SET MIDDLEWARES
 app.use(cors());
 app.use(json());
 app.use(
-    session({
-        secret: process.env.SESSION_SECRET,
-        saveUninitialized: false,
-        resave: false
-    })
+  session({
+    secret: process.env.SESSION_SECRET,
+    saveUninitialized: false,
+    resave: false
+  })
 );
 app.use(checkForSession); // See if session exists
 
 // API CALLS FOR USERS
-app.get("/api/login", uc.login);
-app.post("/api/login", uc.register);
+app.post("/api/login", uc.login);
+app.post("/api/register", uc.register);
 app.post("/api/signout", uc.signout);
 app.get("/api/user", uc.getUserSession); // For testing purposes
 
@@ -49,5 +49,5 @@ app.delete("/api/homes", hc.deleteHome);
 // LISTEN ON PORT
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
-    console.log(`Listening on port ${port}`);
+  console.log(`Listening on port ${port}`);
 });

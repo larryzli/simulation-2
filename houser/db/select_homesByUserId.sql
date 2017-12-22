@@ -1,1 +1,1 @@
-select * from home where userId = $1;
+select * from home where user_id = $1;
