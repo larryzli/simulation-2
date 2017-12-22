@@ -1,0 +1,1 @@
+select * from home where userId = $1;
