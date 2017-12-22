@@ -1,9 +1,10 @@
 module.exports = (req, res, next) => {
-    if (!req.session.user) {
-        req.session.user = {
-            id: null,
-            username: ""
-        };
-    }
-    next();
+  if (!req.session.user) {
+    console.log("creating new session");
+    req.session.user = {
+      id: "",
+      username: ""
+    };
+  }
+  next();
 };
