@@ -6,8 +6,15 @@ const cors = require("cors");
 const session = require("express-session");
 require("dotenv").config();
 
+// CUSTOM MIDDLEWARES
+const checkForSession = require("./middlewares/checkForSession");
+
 // REQUIRE CONTROLLERS
-const hc = require("./controllers/homesController");
+const hc = require("./controllers/homes_controller");
+const uc = require("./controllers/user_controller");
+
+// INITIALIZE APP
+const app = express();
 
 // CONNECT TO DATABASE
 massive(process.env.CONNECTION_STRING)
@@ -17,7 +24,6 @@ massive(process.env.CONNECTION_STRING)
     .catch(console.log);
 
 // SET MIDDLEWARES
-const app = express();
 app.use(cors());
 app.use(json());
 app.use(
@@ -27,8 +33,18 @@ app.use(
         resave: false
     })
 );
+app.use(checkForSession); // See if session exists
 
-// API CALLS
+// API CALLS FOR USERS
+app.get("/api/login", uc.login);
+app.post("/api/login", uc.register);
+app.post("/api/signout", uc.signout);
+app.get("/api/user", uc.getUserSession); // For testing purposes
+
+// API CALLS FOR HOMES
+app.get("/api/homes", hc.getUserHomes);
+app.post("/api/homes", hc.createHome);
+app.delete("/api/homes", hc.deleteHome);
 
 // LISTEN ON PORT
 const port = process.env.PORT || 3001;

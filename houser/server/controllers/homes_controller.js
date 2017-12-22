@@ -13,12 +13,12 @@ module.exports = {
             image_url,
             loan_amount,
             monthly_mortgage,
-            desired_rent,
-            user_id // temp user_id for postman testing
+            desired_rent
+            // user_id // temp user_id for postman testing
         } = req.body;
-        // const user_id = req.session.user_id; // need to integrate sessions
+        const user_id = req.session.user.id; // need to integrate sessions
         db
-            .create_home([
+            .new_home([
                 houseName,
                 description,
                 address,
@@ -38,21 +38,31 @@ module.exports = {
     },
     getUserHomes(req, res) {
         const db = req.app.get("db");
-        const { user_id } = req.body; // temp user_id for postman testing
-        // const user_id = req.session.user_id; // need to integrate sessions
-        db
-            .select_homesByUserId([user_id])
-            .then(response => {
-                return res.status(200).json(response);
-            })
-            .catch(console.log);
+        // const { user_id } = req.body; // temp user_id for postman testing
+        const user_id = req.session.user.id; // need to integrate sessions
+        if (req.query.rent) {
+            // get filtered homes if query 'rent' exists
+            db
+                .select_homes_filtered([user_id, rent])
+                .then(response => {
+                    return res.status(200).json(response);
+                })
+                .catch(console.log);
+        } else {
+            // get all homes for user
+            db
+                .select_homesByUserId([user_id])
+                .then(response => {
+                    return res.status(200).json(response);
+                })
+                .catch(console.log);
+        }
     },
-    getFilteredHomes(req, res) {
+    deleteHome(req, res) {
         const db = req.app.get("db");
-        const { user_id, desired_rent_filter } = req.body; // temp user_id for postman testing
-        // const user_id = req.session.user_id; // need to integrate sessions
+        const { home_id } = req.body;
         db
-            .select_homes_filtered([user_id, desired_rent_filter])
+            .delete_home([home_id])
             .then(response => {
                 return res.status(200).json(response);
             })
